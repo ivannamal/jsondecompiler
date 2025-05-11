@@ -49,5 +49,3 @@ data_merged = merge_strings(data_obj)
 # 6. Записуємо у файл
 with open("merged_output.json", "w", encoding="utf-8") as f:
     json.dump(data_merged, f, ensure_ascii=False, separators=(',', ':'))
-
-print("[✓] Рядки успішно вставлені назад у merged_output.json")

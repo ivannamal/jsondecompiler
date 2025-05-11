@@ -24,7 +24,7 @@ def unescape_strings(obj):
         try:
             obj = obj.encode("latin1").decode("utf-8")
         except UnicodeDecodeError:
-            pass  # not mojibake – keep as is
+            pass
 
         return obj
 
@@ -40,7 +40,6 @@ data_clean = unescape_strings(json_candidate)
 # decoded = bytes(json_candidate, "utf-8").decode("unicode_escape")
 decoded = data_clean
 
-# 4. Завантажуємо лише перший JSON-обʼєкт
 try:
     decoder = json.JSONDecoder()
     data, _ = decoder.raw_decode(decoded)
@@ -49,22 +48,19 @@ except Exception as e:
     print("[DEBUG] JSON початок:", decoded[:500])
     pos = 2475351
     problem_char = decoded[pos]
-    print(f"⛔ Проблемний символ: '{problem_char}' | Код: {ord(problem_char)}")
+    print(f"Проблемний символ: '{problem_char}' | Код: {ord(problem_char)}")
     context = 50
     before = decoded[max(0, pos - context):pos]
     char = decoded[pos]
     after = decoded[pos + 1:pos + context + 1]
 
-    print("⬅️ Перед символом:\n", before)
-    print("⛔ Проблемний символ:\n", repr(char), f"| Код: {ord(char)}")
-    print("➡️ Після символа:\n", after)
+    print("Перед символом:\n", before)
+    print("Проблемний символ:\n", repr(char), f"| Код: {ord(char)}")
+    print("Після символа:\n", after)
 
     exit(1)
 
-print("[✓] JSON успішно розпарсено.")
 
-
-# 5. Витягуємо ^рядки
 def extract_texts(node, out, counter):
     if isinstance(node, str) and node.startswith("^") and not node.startswith("^->"):
         key = f"line_{counter[0]:04d}"
@@ -81,7 +77,6 @@ def extract_texts(node, out, counter):
 strings = {}
 extract_texts(data, strings, [1])
 
-# 6. Зберігаємо в strings.json
 with open("strings1.json", "w", encoding="utf-8") as f:
     json.dump(strings, f, ensure_ascii=False, indent=2)
 
